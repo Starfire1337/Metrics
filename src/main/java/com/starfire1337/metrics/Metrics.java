@@ -27,6 +27,7 @@ public class Metrics {
     private ScheduledExecutorService scheduler;
     private Runnable metricsRunnable;
     private ScheduledFuture<?> scheduledFuture;
+    private boolean forceEnable = false;
 
 
     public Metrics(Plugin plugin) {
@@ -41,6 +42,11 @@ public class Metrics {
             System.out.println("Error while starting Metrics:");
             e.printStackTrace();
         }
+    }
+
+    public Metrics(Plugin plugin, boolean forceEnable) {
+        this(plugin);
+        this.forceEnable = forceEnable;
     }
 
     private void init() throws IOException {
@@ -62,7 +68,7 @@ public class Metrics {
         }
         config.save(configFile);
 
-        if(config.getBoolean("enabled"))
+        if(config.getBoolean("enabled") || this.forceEnable)
             this.startMetrics();
     }
 
